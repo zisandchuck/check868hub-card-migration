@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow, noarchive" />
+<meta name="referrer" content="no-referrer" />
+<title>check868hub 卡密迁移</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:#0f1115;
+    color:#e6e9ee;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:14px;
+    line-height:1.6;
+    display:flex;
+    justify-content:center;
+    padding:56px 16px;
+  }
+  .wrap{width:100%;max-width:440px}
+  h1{font-size:19px;font-weight:600;margin:0 0 6px}
+  .desc{color:#8b93a1;font-size:13px;margin:0 0 24px}
+  .label{display:block;font-size:13px;color:#aab2c0;margin-bottom:8px}
+  textarea{
+    width:100%;height:68px;resize:none;
+    background:#151920;border:1px solid #2a303a;border-radius:8px;
+    color:#e6e9ee;font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:13px;letter-spacing:.4px;line-height:1.6;
+    padding:12px;outline:none;
+  }
+  textarea:focus{border-color:#3d6ef5}
+  textarea::placeholder{color:#555d6b;font-family:inherit;letter-spacing:0}
+  .hint{font-size:12px;color:#6b7483;margin:8px 0 18px}
+  button{
+    width:100%;height:42px;border:0;border-radius:8px;cursor:pointer;
+    background:#3d6ef5;color:#fff;font-size:14px;font-weight:500;
+    font-family:inherit;
+  }
+  button:hover:not(:disabled){background:#4d7bf7}
+  button:disabled{opacity:.6;cursor:default}
+  .result{display:none;margin-top:20px}
+  .result.show{display:block}
+  .box{
+    border:1px solid #2a303a;border-radius:8px;background:#151920;
+    padding:14px;
+  }
+  .box .k{font-size:12px;color:#8b93a1;margin-bottom:6px}
+  .row{display:flex;gap:8px;align-items:center}
+  .val{
+    flex:1;min-width:0;word-break:break-all;
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:15px;letter-spacing:.8px;color:#fff;
+  }
+  .copy{
+    flex:none;width:auto;height:32px;padding:0 12px;
+    background:#222833;color:#cfd6e2;font-size:12px;border-radius:6px;
+  }
+  .copy:hover{background:#2c3441}
+  .exp{margin-top:10px;font-size:12px;color:#8b93a1}
+  .exp b{color:#e6e9ee;font-weight:500}
+  .err{color:#ff9a9a;font-size:13px;margin-top:20px;display:none}
+  .err.show{display:block}
+  .foot{font-size:12px;color:#5f6774;margin-top:28px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>check868hub 卡密迁移</h1>
+  <p class="desc">输入旧卡密，查询对应的新卡密。</p>
+
+  <label class="label" for="oldkey">旧卡密</label>
+  <textarea id="oldkey" placeholder="在此粘贴旧卡密" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+  <div class="hint">区分大小写，首尾空格会自动忽略。</div>
+
+  <button id="go" type="button">查询</button>
+
+  <div class="result" id="result"></div>
+  <div class="err" id="err"></div>
+
+  <div class="foot">查询在你的浏览器本地完成，卡密不会上传。新卡密仅供本人使用，请勿外传。</div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var ENTRIES = [{"i":"117da8fe17790b0e302089662c4024be0636c7f5d1c91723faa540dfe7188c7c","s":"Qgo8G9CLuiAfJGGkv2fp6w==","v":"hmBtujXZ3sXavfZh","c":"DpY7mcMZ21MFT15V0YOiiQkBGJ6N1VHB/A6BAB3AcwQRkzHEUNAHF2fhfdR1fKsHcVzFNIOTcPZI"},{"i":"7b00de9f9e02204a24068008103b023eaaa06f595c8feff851ba891d7a1156be","s":"R0ps/38OHnOWKBjOyCkuHA==","v":"r45GpZtjpCq+r9rw","c":"1q+grOhyymp3p9NQAsJgLh4UjmqO36INJ5B94Kmps0rIODtRUofDotAnszOz1oiMEaQ/ZcK+pIK9"},{"i":"2bcc76da1103ff4132c5ecf5f5cdac2963d7b6c4c091f7ca67768191c4f1b2be","s":"X62anVsCkL02iv/pGeF2aQ==","v":"ZtwrzA/rA8tZhM7K","c":"C0hIeyoU54eiFJEnHQH8sGV+hogpLfRfPfbOj7H3gAkkLQataqprRzFd45ppbuRboh7r8eA1AyW3"},{"i":"ad387ae10772a301d4c0740381049b8c3389a9331e93401bfdf0f8d51c6c8fe0","s":"mXEnWzIR3KNM7n2AYvfLRg==","v":"0JdpwLyLJYnRo32b","c":"4e4RmgxNLk7YIxAHiyIJsuHhfUL/uGrCV6UOHS4EVPgEQB/vBPyyNE23bqmGGcJgu6PmZ5sO+VP+"},{"i":"1f5761e7381c4ad87eda6251ea4bdde7c7f5f46ea50164dd42e0302a917c100c","s":"lDl5XuTfhpm6vAASOWzw6g==","v":"eGB3cY0GlOrmfuJg","c":"Xb+0QpK065PjvIvx/A07p29zpEGOGvYa94ZGy1dWXzTxlwDKKA9pGHBDNIXlJ2KAY3pwXDtpchBU"},{"i":"48c348f0098f97e7fc307911fe91ff8ab9535334a8d2eeaf7bf1cd64f8d3e6d5","s":"7dv0i56HbfwatvzKQs/MqQ==","v":"K4ez2k23/HMzFuZ4","c":"f2OawpBroC4giHn8gYMFuIGPixMVNsMQyB2m2kKpX53Q+dZPKje4YXGjbAMbrIxC4qD+uezKmUvV"},{"i":"58eeb0cf77d5415bd1dbcd9080d0883bb8d35353b9911cfbcc7340f6467e19d5","s":"zSL/FgL2E8EJb2OFsjL6tA==","v":"j0eNm8vrISH+4VnH","c":"1MxKWlqscDFPavZVfQjRIYQ1pW/hj3ASgoipBfYbwtODyngV5B5PFxdrfuvtQu2CR7qfmQQ426FO"},{"i":"1855595c7325610039ffd0419797a5e22ea80868818ce1f148529fef38ab8c4d","s":"+FbsCL4rLDxqyUJgeiptIw==","v":"TMKlT522KaKLeu65","c":"y/dz/S4VUOuHQCfQzIzvlNsGerif/tFTLriW0x3gj4NNgrqwvlzZmN6JuezPdPVJe+2DAJhkKCJG"},{"i":"4dc4173f9490828084e6f99e77a5a11fad4d53b9c0b50236c47ee974e12ca56b","s":"+wf+o2gTIhrKO/PY6K68hw==","v":"5GA83FUNuviNNiyO","c":"vktYZEZ89vTkz7Tys9wLJaZcz2VCdn5Rw1IMAcuesj3HRhmZ0fWcT5VcBANYtjkNud3lfd9aYfxA"},{"i":"c1f3ce60d76f29cb6b389fae34eb00b8285df9c7e2545a521421a0c28cb66efd","s":"dw+vjPDUvJcWW6cc6ihDUQ==","v":"9N+lFGjhVvYPEA+P","c":"qzay8yKlpXIcaxJY+FdcoC/3W1ubjEUowy+ItEcF4P8WNfD9a6WpSG8Y0Xr6JmWSHXEuQ5+i9tkL"},{"i":"e689ba0a4a4499aaea04bdc680b55edd63a9a735987a19f9e8c6959f0d089342","s":"xz7Ecy7Go4ayHP3GwZYEzw==","v":"r0DnX5CWpxvwBTnw","c":"c1/mCj22MRPejIZGzkKCvpzPqXJXOJRZprH06x4PEG0rIqjR87w8IsGKP0x1uQ3wjAr+q+u7zXCl"},{"i":"53b743f6b5da447bcb200b9ab4bdd9cb9724166226591402a81d31918a268d39","s":"wqMe+1pu1ChnhAEcqU1P9A==","v":"qh/Y+qSB4PKzin2D","c":"h0Ufkf9tspB35HuBOjZ55sSFsgNASeQ6kuvpcUWyCYOEJzLQwmC5lmPqanoqkQHsasI/qa48TT6v"},{"i":"f3e2c8da942c664c621dafecc141d069e6d04913c71033a0b2ffb95f8ef2d388","s":"YGpe5lk8pdg9rtzPeGqBxg==","v":"9DMx1x+/1heCGKCZ","c":"wtNjUoMeHttc3Oa47zzCJx2KKddwYtik4ADrjyZHRhkEB3/2cmht19aUg0Lx8D2w7bHbWTKxHfJ5"},{"i":"2389f21c2695137ef72bf422f5a2e9f1a0236d407ae63d952c6cf544f96b56c9","s":"dp21iqHLppHTR00kg8QRyA==","v":"QnIltlMb46B1577v","c":"FPywhKdxl/u3ZiCahI7bJmuhE5vnGqCiOfGPkdEv5lH+aaULyX4uUBsGfOyaIxf84hzrdV8lOR8Q"},{"i":"756a2fa8b51a84d2ba137ee6e18e0017694132442fb011d1bfd38170f630adf0","s":"w8FT+FDoPEXR2AP52ta5hw==","v":"yrC4ShrEEtEz+Rsl","c":"QwSRyZSWAgpD9k58Sc7ckfWHI1ijNzLWtFj0JHIvJCsbCW3lu5uN4h44T6bU+gg0wnq2HGZ77/03"},{"i":"e20de8cbc1f670b42b0373e8fc3a50f3e4581ff564ce7c856cc541f5b587bfa2","s":"yScQzZ8Oh6iI8DXGxS5heQ==","v":"jzpZKieCXOkTeOcw","c":"k/+aMkN+jk8GFNjpKF3InfroyKGCTJCk4mdVOEAfKFHkhMYaBvh3xw4+63v/wgBZorEMBLnRf9gB"},{"i":"a5af1f1ba998ae4946fff1e46b716c18f2bf923a6379d08500234452b09fc4c7","s":"Josoj+elJgGWxc70mBqbCQ==","v":"do5BbeBs5VzppzK2","c":"FbDkJE3Ny/dCdO2U/IIsQI9fQXN7xIgxwEBXB/1DOWwUmzRpKw2xuAswu7Wz7K67ZLhjfFNslBXy"},{"i":"61891145c0b628b2d5079b59958ba8423c17f31be6132307754e530fd3e80de4","s":"6VJRwWtB6/QN07yIDJmkww==","v":"Cm/goNLv7rnhpHTk","c":"DXOBOgAoMEw+DygrpC4ENzs80f5ekSICWKhWk5cSgL7Yir8UObjOrf9E/vmIUjTuPXywy3a+JryN"},{"i":"93f0f9db5703bbda9d8e54d7c55f1629741a17161745b93d2719429125043048","s":"u+5rp4Zixtvz/gr9b4j7cA==","v":"4mcQ3pxdMUOl7nJy","c":"l+pFnAj110zc388pi/aliBhzEuWJLQ7L6TVOOeT1X+UYmtIHiesfA/RNLJgaKv+eu2+/bMrvu3j4"},{"i":"dd29b90af7ee2d11df147307b8f4224f95ba506e8ed716f7f7968bde0193ed6c","s":"oiiVMxI+sH3hLhoummMBBg==","v":"h69Ygs6Hsh+IfUl6","c":"I85Gm/Tc1q2FfXtoCOlNdVcMas/FopOrcewiXADgRuj3UftW/7naSGRz49b01V1FZuFd7Nhh2KGP"},{"i":"20df9f88f48d7f169469403bf8e3731afaacc797478a9f534138f6e16cd335fb","s":"7qXYoe+a9QKV8yTAW19RYw==","v":"dbyTLAhCjx9KfXPE","c":"8sn4lxGJJ6nTBUc1J9LoUbdULnvUU5GWRyz/dX85juB+IgicaVBBIpcb5Y49Xua8vy6iZE0IJlKY"},{"i":"a07d766ebc578ee81289505a580b5f62f84649af81c589f57958df5be5917f5c","s":"cSccBz12b96wCqYBjM24IQ==","v":"wPJfhxzFDZo7fs6w","c":"WgvPFWgNxJy+ls6nc3Qme6Ujj+kRLomBO9kOvg9xQ1JVrBAj323oEGrZp9Gm2nXkkZis6aYM0zCk"},{"i":"4c38c02e2a3983341ade2a76fdb84c210a524973bd30296b3a026a7cd3887f16","s":"/jHFWKU64I29kbaWj2wNeQ==","v":"eFWgiqA9DiJ/g+Gw","c":"tAoRmg3cchaMVsrPlVgEBB4kBK3ip4+D0ddiqpgs2CYaMS+V4B5PharykzbrMhg4QQPhH73wqAao"},{"i":"add909110915812ef82778a253712919953a9eb125276ed7e6eb0f64247465c8","s":"qL+6amJbw0UslJvRpOugqA==","v":"fG7AhZddkbUQeEqB","c":"fx4kaCH9+MgKRSymL/kKF8mYahPrb8fleLV8pHZmkYuUUf1cu+rwshk1wxCZ4ksOHf0n3ljUjmr1"},{"i":"938cd78500af239358191f1691ed125f5a64c4272b45bc59c9ef874ca0a7e28d","s":"Dj6L0WA70F/pMdceUd+nsg==","v":"ziGVeLaEY/wMtW+u","c":"ROtGpKiKv+3bmeux0TF6oi1WndMBx/XMQlXFRPX/7hu0//gF/PiqFlrac6co8vsU5ptUPEhpxVxp"},{"i":"e99b23fa1e3c2f92cdbf882c8aa0859c0f016f9597cb034afd10199e44205538","s":"/XbmCbK7emAf5b9XMz+VzQ==","v":"eby4IAIEXAaI5HLj","c":"gTuk4fBkkAyX06rKc1PvChjWKYzlFEY3boEXCkpwgnRANs67XRhsDo/MgLq2piBa5ucKtBq2S0Xi"},{"i":"433d1e19819f52d9f01d65742a598dce15561767c563abf55bb701c369a86397","s":"AJRttHrvykFHKeE7Wz2Xzw==","v":"b5XRB3zs/+uzCg1i","c":"tBiS+VXdacb4JTbBM87HaR56O8fgUcBQcZhzLFY/ednkSMX18B3PM3euHmFJINljsrcBcBcbdXXq"},{"i":"74ddbf5345baab2f1e9d66ee437bbf3b499fb86570894bc5f29fdc75e97dcea3","s":"SP5ZmzQCdk/1OGialjDzwQ==","v":"IgFT0VPXnIQz7Kz/","c":"XTrKe1Z8MG4Fr8rRkjlNZm8hriT1c+VqX5QVg7ey6GNh16ZX6uyPqr2TYQN3xTUrPskUERlN5okS"},{"i":"152ed325a99bdb0bbb33674ddcc6456ec242f72f9c69cf079a980b2136ea7e70","s":"leSSVohPeAG4Tl5uhC3DZQ==","v":"cKxtJnq8ICYQcOjs","c":"dAv5yMZc0HLW4cnZMqWzvMCQfqIvwmS6PJzJnI7FvzrF5FG8ezHq2LauFRWZyghCy7yjVvSTZmib"},{"i":"657b0931f78de675d121cd0f0e85b2a7247b53d7e4c78e2e9858f94ee8cb70c5","s":"dTZ5ki4IKf8TrkoV7GLQjA==","v":"4KNsBLE/+wn7kwQM","c":"fnvif3lhevLH0+3/2E2yqtGuQZ84jB8YSvY2rBwRnV7m4Uy9wvHrXhgksxoyTP0ypIKpL4+Bc1po"},{"i":"8c0c4d99e3e17b7c37f5e867fb8913065d190a30a2e68dd69f046bcae2d114a0","s":"14HFVwCesSehpzkQiuguqA==","v":"g8bOr2j1ScEAcpIz","c":"8/DsgGJDeYArNtKpxiaf/E0Yl40IR3F5/huCpsd5KygxYlGY9CdKSEu+6p42l3i8DJo+gGFdN8km"},{"i":"7ea7c40bde6a950c520beee46de5cfd3f2e1d9fa69e026d08585cd09918df4a0","s":"M2R0LgxOfw+2Pfgq08C7Ag==","v":"1XexHEdd9ibUXivW","c":"dTgsDerMnv49l3gXToGg5UJ30KlwggqxtvgEo9MPk5c/HhreLvio9nKuR5rEe0zBI4hu9ZDGCWLw"},{"i":"b96769ca268fb36cf5fcc3e78fd9fba79b2eb8d0d67b19e1fb20d52aee17a597","s":"cE0h35wY49X0ZHWV+TOPmg==","v":"3d8PaAmerKm6amPA","c":"ol92wCqyHymsS4ZtVN+nyrbBw2CZX/EWZ/u5LpjLLDQShCUa5+o864dBu+RnrAyu1X+IJwgZERfn"},{"i":"5abc5ad6fa83604340ab41ad35fd3a4b42996bb5b59fe833787a63f31809104d","s":"rz/wBIJ7K4DredL4/oWi6g==","v":"JJW+0VNBGJ0nU7lB","c":"Ps8BvgK+NmJ6QS1uSDMC8xryK2unkyaJQZofL6FYC8gqtpHdI1KHftqcs0lj25U4HLpa+/MILhSR"},{"i":"de1c9989d47acfd684a7368990fb533216a4a74a8f998cf37628a970ca9cee7c","s":"5NFSWVsPDaxggGTgnPUBhw==","v":"TGTWK4/vb7jNCDaz","c":"N2nDxO/fyhVVPt/BVppwsrzrx1GbASwBgQZHLBOcNvoyKgRkwREFeVZSD9cxIFfka/jbFYh7Bndp"},{"i":"40003c1b68648ea40f629b1ca2e85d8b79eee0f78d251ac5ffb7b1aa14d5d59a","s":"IqT92fojVuwKVT1nihEkTQ==","v":"R0Puh07k/DE4X0DG","c":"D8i78iGKAO1wzk1C5XdKrUyzVGpPcgYDLAcj4M8Rx+Q8DFlt3/H8jBjhaU8e4NmZH5SQST7cwfks"},{"i":"6e2d8a78fec551d3b968b2ac2399b6eecafb1b7cc860bbea68f3405f8a7b5700","s":"lf35+BihV+crI0Uml4Fweg==","v":"Hpx9vLqQxgtE9I7N","c":"TEb1N5Fq624Wso6MEIUbkFDNTknTx/jK7dy0qKNFrAEmz+6zMkf1Ncd1VdNjHLZsZi/wJy+k6J39pY7r8EkH"},{"i":"9cb9570917a1d759561a8d5843aa4d4b55be269351866eb0d39598b20d8dfc4c","s":"qqmkoZIhuBGkBdxZDe8PCg==","v":"2gqcWPVjIUyVha0L","c":"uWWDopkpUAALHuIEcwzCi87hAz+7kcJwdKII8msy/Q67v4j9QvTYjReXEE9+62CBkIm3Og5YUD5tbrDaeFyA"},{"i":"66cfd46484ad943d82accefbde18ffad2a2900419c0a91b33ccccb83b8306c80","s":"0tJ2Co2m6j+CSlq0PkOsQQ==","v":"Pg6FF/7M9fnVqUOJ","c":"TKJLDnCt0HxRWMlZtFtBY2ZYDMUeATgpK/nq05ipSYI7BHeyi2tJw6ELEbf4X8MwtRkSE8m2L0BTKusOKtDG"},{"i":"b55cfd228a4d4a571fe898cdf0ed40677e7837ee96f79e2da4a61bc58d548b15","s":"VFPx+yYeE/6QB6pJnhJg3g==","v":"Ot8HNZlL65LuTpz0","c":"yB6u0twuOI6k8I2ev0D8EUVi6h2RgsGmxyqtULfDyi/jtqCiLpC0xsHbP8PumhaUeeNjp6/oK2eb+mv3z0Su"},{"i":"cc62ee4264a6121d2ce663ec68bc9cc86bfe8e836fb06a7116730f8e04f00d14","s":"jN8VJ3N5HtJ4YaId6DQHew==","v":"FX103BZRtOME7sW2","c":"EjWh51ncQ2rxHD+KsHaPTbb63LMViAqBFRmpwG/BQpfyBS6moypq5Xdi5q/tI7kvX2Z53E6QHkxbd+64t5PC"},{"i":"6a27d8bddf00e70ef8f8844358fe886c4ee299087a159468adf2f8260e2afbe1","s":"4hwzTbnWDhaM0YYYP2pOMQ==","v":"MF7Jf2ahHIOITUVg","c":"erP4HwzYeO0qytGQH7x4sADDR4eBdIRwYKAQhCpJkbbOUo1cgfMEhu/RZfnljuZWMpy0EyQuXXr8jfJ9m3NM"},{"i":"c352def23d35729ba60475835af8ff139ed5a4ef0098730197c596a56d862668","s":"DmI9x9xVedvkTs2G+uhI4g==","v":"w6lWlzmTHTKaEhrX","c":"zndL6R9NYVwRGDlFoysCCcp8cYzYkB2UvsSKP4nSU+rQ43J/4ah5T7kYXWehM+QYZzm5IYMNC60rfw9nc36f"},{"i":"621ed50c1e3cd1d553194bb83c05fe550cb713b11b0e778898117f183ba122a1","s":"zoxknIvo/avjFfMEhCikyg==","v":"dl+oRH13ju5L5fAR","c":"nudULaM57FxzMb2zqbJJopqSosI995yDggMeT7/moZuwtM+XhfUWexQauGHuuRAc4du2DkaDfbTMUyyCurID"},{"i":"be1a650f21993d37be00b358f124eb2eb8ee2ddf98c53ea953ccb79543fc249a","s":"51VEw/7lEnN2ksH9uggpTA==","v":"p/lB+xG+67dFHQy0","c":"8bj93W35DLfF6lFlVuKIsMngEbiGXIs+RZn4HX0v4wlG/EjSLwMxwxZRcB0j0JVvGAhCg2uWL+c2LRBm+Ywb"},{"i":"47930cd99ce9b8e714d782dec5614f22d3b9dc61b274cdbdfbbe0593a88572f0","s":"wOiamjd5vq4s9RxkXb3ImQ==","v":"9RBI9gg/soz7SRy4","c":"kz7dwYQYXWDPtRA/JTKM6fsPRUMMWsgmAOnnQla8MLBJQbSgbklBnDsc31yheC06mcBrylt0M0tboHC0lFwS"},{"i":"aec4769942b10e666a2f2c86513e6ba0f2de37d274fc8cfb09dcbfc0de80f623","s":"BcbfCdD/1NNiXIIl6sg14Q==","v":"Km6p7vPzxfVWzIOC","c":"q1xgdco6HOt3XCqxmRR2zhhOQ1eEYMJCPHy3QYJffxOoGeLyyMmCmb3tvuA+k94O+oxhoVSDaEC6wyDf9KEX"},{"i":"0444d59dc8a98f02cf286b0a383685c5e9e5f2a6a324d995b147bbe11d0e3fa5","s":"MxVFBeBbQjTphyLiO8ppgw==","v":"rm2l+useJCHcF5hB","c":"PwSPhggCibhnQLgK+RFA6NNbVPbf40tb+zpD9mfbmfzR8JtxxcMzSVUBL3GC0ZNIviKuFO+jO710nbsyHsj1"},{"i":"f2a5f8474da1333a39547293b000a94ece71185e25c4ffae730750d71aa59756","s":"BGIrYVK62W5WB5SC/nQdnA==","v":"TkrOpuHPEGRdnSlp","c":"lwbXOkcjVvpq0sCPWZi8ekReuKOi9ntfqoFtL41NE4ZtaoJ8FfRoG/AoyNMFrdtcH41MAprDd5IgeoI8l4ym"},{"i":"52bff62bb4ec98fbdf1836dcc83291332251c70e34e9da181fad74ba44f2b398","s":"BhhizsYHLoO6vWmd6wL7hQ==","v":"YU/OVuCiCH+/5QCv","c":"f5qhXoYx/ZxsMjkkV6urGGpbSPgs1GVk67jUDEjjEa8N3eCeEh/ZiBOrIeA/cWijj7qQAaPdp1pTjQSa4coF"},{"i":"f449497fe983953102f88ca6f60accb13d8070de4da342d03608df2954c99c26","s":"2R/6ZlEfmnuikkG1YuvYhg==","v":"e5VBbtKrJFBmxrze","c":"p8mmwc1scndv+xZKRhxAC/cuDgsLnFhqMbaaMTecddxqUy0C92+IsSZWU/wVU9k1JqEZj996DwJpNC57N9Wj"},{"i":"c4a3b10a6b98ee0aaedfd6222d3de41471207da478f563dd0e2b047529bb987f","s":"MiXYxphlN4iJknZJNP8qMQ==","v":"c7gAOmJq4YuVNW8r","c":"U8Y45hubKlJbQ45pXSae9M/a7al30NbVRON4scahyYHna78HP39V6LyVAH2cGRn2UbuQJLQGL9KsRLt9gTAx"},{"i":"d0276dd3fdf1f2e40e17b68b2f1c640739cab0017318bcd7d3d26d896697321c","s":"GO8X4ibhVIJbCCLeipefJA==","v":"jWHCc4C59Kz5cjiz","c":"hAdpWoyfEWwB56tvvkUSj+W9g6sCJpf9aAW0ZjSk6EDkFJbXG46EDgJh1pbyi0OYolGBLl04LrAOmoh7Brmu"},{"i":"8cb442015531b24e8cde57b33f788a566cb2b24bf12db599d14edf5d9c89fa55","s":"ZtyI9pWgSBfyyORjqBRjuA==","v":"ekvr0ZIpMucKTL08","c":"GdOPwSvzmYaNH9uFeU0mqjJjv1IleFkXBGabBgViCbnKZND6BcDah1OK+ewrSfZQ2qPKH6fZss1ym+O35az/"},{"i":"02d9eb2d78bafb5a7b176503aaacab755b17e1d203339e37fc8bf74d3186bf91","s":"qLojHH/4cyBAow1qBS3wwg==","v":"vOYH2EGdQbFh+Gsf","c":"Egn6F8OvwQ89HQnG2rQGwjM6DnGR6A//HsNpgX8jQ4A60SijMXjdLuw1r9LPdJxWqWRLbA9p0pC1mlxilyEi"},{"i":"607061dc8cdc933b97b3357ebd5574dd9bf7a38d8e8076d9c49d19ec3ace7fb3","s":"ZXWkRBJd3fpV4nnRDuz0sg==","v":"9YGVtLsLamGOj9S4","c":"6OKMJPuaI8JqX0JHvgPiUHFm9DnRyWJY67Ejkqr7NiVEq9ekV6idQxQ5x+8yL5uov9KPb04iychggaGURv3H"},{"i":"ea0e531ad0f37da1364f0c2e42e220bc886a7d24ca62475dd6dff506cde092a5","s":"KeKL7u2AajWw+5DFjWQQGw==","v":"6ntKsLFWztvOKjSg","c":"59W4oMLcoETLtVGmGp2leFXvvg5W1rURJdT1EadUapALPOngaBg5bQl5QiwWaDMOTtNSxla8sWtB2tQ1ioPR"},{"i":"8d42eb0af945e2b02e88b9cc6cca688d1da5cbda8d0aaada5c8944dbb67d4463","s":"J2Lxp68vgTNz7nG/dL/vvA==","v":"S1+SG1gilO7d0fA9","c":"JZ1WuEPE0RiqU8DGo/lBYeRFBlFXULvbOUrofPhHU7QhQlEJTEeo14YayIunP6N2rvJ7TUD+NT2ie1kalfWK"},{"i":"2ae16e943c39cbd380187a6883fc4829a4488786103beac2e40e5a9af29c86c4","s":"Tq2nSiwd7EfMSKyUyFikDA==","v":"4oyGceHdConfwULB","c":"/TtNgh2HIB/qSQsFPPlMfjDleaRfL6gESPquytKdjq6Ddv+UP5tDX4qnaZy0jA6MzWbZJkALkNu8LvjrAiFi"},{"i":"2c86cb16115264fe58bc629f86eb5051bd5ed19504b5ddd5bbb57644fa3fe3ef","s":"lqxbv1a2LN+xf4D7qb0LVg==","v":"qmZ3cg/U8PCgjxEB","c":"rrhxA8iZ85AdkrkSm6EGDjFGBInOTBwtly+cVf8WP35ZMk8hHQAfVB4HKqYfNrJYQKlkUTAYAZzzeOtUgDIi"},{"i":"dd0c3f3ec6020d3892e2066397d1b3c3ec9afc89520988e51190839bcb39b18c","s":"/6ESMabDqBYTsVdImv0uhQ==","v":"pKFC1eclJKdJB7Rh","c":"ysqOBB6XvgYnyWjynpXjT25iaVIRqlSvP4fAaoEAEGU1I+EsZPAN6cEB1fX1RLMDCseMtV8xCbvIYWMWmdkF"},{"i":"c769966e2a55d0b060387d3de40ac9ae537e0f77fc10c908eee4fce4d02c370a","s":"n7pVt7xdV598TiZe0em6Yw==","v":"l8+3YEERpGg38Ur7","c":"hQFcfQ2aKKajzydDVQSP7Loi7HqVoWxPL2Dsq9n+mQmbwyoQCEHMbOSRKt43BoaY4tmC4YFNUHGk4w/J51BS"},{"i":"747719b833b39c163f0742a250536375196930dbee7ff470bba7345cdaabc3e5","s":"AzUytm6LNRwz7p0g3U52IA==","v":"0sGUwSshbdCdVNCk","c":"uiR9wfG69nVDi+HFPdruWYOreRFJgeoNuNVUXHM51zh5pCzU7x9LGn1apKT09S0QDbFK3WArSsZNR+Xt448/"},{"i":"04b6933ececcc6d2730b716b648a61082e5eece4e4120c6f5373492fdc4d9796","s":"7ZToZ5YKa7+AvuT0UJBD9g==","v":"19KALInbCBwcaW06","c":"7ChKGcs9DO/1G36aDWeUy850uKmqPayA6R8G072mu4hWnAPnhg9shZO22THwRXt0luaofdFwmzRLzL4QGDQQ"},{"i":"c0d4d553e14d88dced4e37d98ff930c4223f07f8c745e56ceec215fed939a456","s":"MFPHbNO3SQk9xUHLDZl5ag==","v":"R0vxInJeMQzxUEDb","c":"oTMUWfPFJkPn6Nv8foGyzAKRsE1d2Yy8/lHexfQGQoTks+8h9BfLmIlpVBdCCMbbRppUtENWg4FB02FOgGcv"},{"i":"36f487a440fd2410a1114e8c5cb3c972a57c6b7c2b46536dc58776f3bafd4012","s":"GrDsq/nmhfzeNlHKGXNPMQ==","v":"Z/j9frkOSMokRanz","c":"4ChCAc0hqG765mhqVjL/5fxD/5nzue5Cud7xEDvJ26OcGpbNxuBDwuXg+J6olfTubGjGh0C4QQF8u+zoc0gt"},{"i":"576cb6cee16174fb408cd7c008b020723ac07354873a795e9a52ce0a203341d0","s":"9eLPjBZ5HJA5zgbLs3uZPw==","v":"bRbr3Nyx1Cvwm37S","c":"2qRb46xwVcFgPyF3ntI4BTZeoEfSTPYZSLxnUs3YcMQ/jelwX+FBzMZsUQQYAFPHHVYNkZYo7ecgGpkISEeW"},{"i":"e53b79fca25f7737369dd62bc9d0a2ff6ef0fa605eb953246a835428980644bc","s":"woryLeisdBsqTiRT0azkMQ==","v":"j7QQa1G71D200W8v","c":"yn9MiXo9H9Mb7P8y2chn2bsp0OIAuEAK13jGXmRxF9mp0lw6TSkDzea+cTbx4np6o4Gqeu0cbtihVc5wcqsV"},{"i":"3b3234536b81b7260f135b8674e7db4f8b2d0876599fdc0a08f1e98b0db994e4","s":"laMPfQUwVnpGx3cmWdvzOA==","v":"C+Bco6g8EihALvWO","c":"8EAANHiQM/e49M7+OyiYF27JuYbI0yDN39Hz7J2pG3JzCmulXdT3LNwTr0tUrL6R5unN+4Jb6Qrp2ocbulma"},{"i":"7f6418e9d5361c7d6de54ebdfb825caf7e6f61f04d2cc75661595bee1bcb36d9","s":"DNF8aZEa5MzVoUggho3ODw==","v":"8noy1q10QbYxgyaO","c":"riEXVrQ6WbnqxcfrBFtpDfA9K4H1EsrPbaEEmJ2hCpsSCTyNth278SpREJJwwEai7HGsf1TnfViruV6R+sBD"},{"i":"c9214c0b9fa4b0601afba6a1b8c98412c6aab6f47f65fa8ad1080c711818a76c","s":"A6zucfiz+a6a8DPEV3/qPQ==","v":"Vv8dKbMYRSCewKjA","c":"Qq0nhNHK4tv25xNBK+kFuVISSYziymOKR+zzuhyZvWvDx/B5MtmO/7JI9hSbQ8DLoYOcph0Y+6VhOpMYZsxp"},{"i":"547e5c913ca0c4ddada2c4db58ec9bcb6f5e1afb97f6f1099e532b17a208ba98","s":"4mK7NDMG7mvRaVg3mGLshQ==","v":"mu8MLuMX6ZTVKuJa","c":"GSCM9gtITjZ1qB7ey5kSkThfNNFV6jDKzcBUigeyLgoUZV3NRMl8eYD86aJm7PAVGLvduSjzUTWItj7T1zLc"},{"i":"58a03a34acd464a4082601b8f3c462b05d1593cc5f0f1327912cb7247e0645a5","s":"9RW8W6y5e7qgGaS3UrGdYA==","v":"lNUlkfc8sLMG4zep","c":"nXpI4jrUtW4RnKnvpbMF4InE0dYD4m3QswdSHUhg3E9n9Zm1Ja+k6CPm213RdH5VbEBtjs0D/xAxYK4QPdvl"},{"i":"f975ae03345c825b929e7f8711d0edd8ed3748a60844c465c17d6426ea45c5bc","s":"kSGadQjcV+kkae2ZN7qJ2g==","v":"obmW0t1FOzDAEQrK","c":"JJyIz/SykQq7l6/vp3lR+x+GYm7xFtUtlOFC50yAwkIjGsX9Fw0Qyjs0AIMftnalg6wM+eqk+cpyGynDWVpl"},{"i":"683d1e79f6e9a152ab891adecda5544e136ce6350bb14e2b7ba7e1c1095251f5","s":"LHGbISzL9uLTrwC1/fjr7Q==","v":"d/MvaObEGKfXpqNo","c":"VvNRDbehu8eRkP6GfEkdWd9rlSKUhvG0ZcHx6wMst91Q+ISfS8aeXdEQNMalScJXTjPZXPT+aAcOmk01kDwe"},{"i":"6225c0fd19872e2cc431ba3b7f07a9fdcadc55d421ee53d68c1894c3d000d5c1","s":"gv4zevKd+KTyWWjUXK9Ngw==","v":"EDnLmWB/zjMouB4m","c":"LDNOLPtxLnAafwiDQUpFQisLkRyuIbUeM67ee7IKKUfOPzQRx19BRTI9hQCeJfqjOYphgUnuc3ewdUc+ah89"},{"i":"de0dd1f57c271c0b899acff17ec2fdff8b3a30239ae7f1eef7590c7856509088","s":"Hxt2hk0Lb4R+F5ZPdXVAHg==","v":"YYkj4FKWA+6foY8U","c":"SqdsLum0g1xcHVey/FXY5HAgp/ZMNhToXlRH8w8QeZaAlJn+DEYoOA3aO+spA3vjmGTGuzZmZU0Od6j+K7JW"},{"i":"35229748811c8e63e3c57b5c04bf0bc15ff02e0372cc2e83a5f4b608e8a384ba","s":"jWI98L2bEFH1Vvq8tpGzLg==","v":"nuh5RVzAPe7vSr01","c":"145DDIgTJcoxb1KkoJ+CdRl/oI7ln5uAgdtOMiHBMDQ/QWpFaZzBMJSpYuJc1Uf+x9vXRy0KkXgIopTwFMWc"},{"i":"2fdd90db1d3eb024b12c93b1e172e18202e356293848c1b5fd9bee35b720211c","s":"riX8m5JkhwXzoHUmtCPidA==","v":"oEYr1YdZcXu0bNsM","c":"4HLGUbbk/LQwHuEParZ6++iw98qiHvM3QMCrhN8U3Fukq2jaLadzuhy+NFJdvA05ipg6M89kyWaS9OU1LNHh"},{"i":"c4b9b57fc1c6c2f60a22d08aaa6d90814e50e8c8240111f7e17be5798a03f0ba","s":"HHgf92k6WYGmg8iWiWPMSA==","v":"bi43yksp5x2DKDcP","c":"KEmUccbS9JxSftGj/B1nyCPERV1BM/bdFF+DqSJzJEWLhjZDucHyKUNtcgQxLLatnWiBsGvfiVSwgEwqVs8s"},{"i":"0f8ddd95a88eda71ff79b85a2b420be8edc0fc84b30890371598edc6f12755ad","s":"GxCpcS57/lPWeMRi/vbVbw==","v":"gtaklrmSNkEtdSTd","c":"JK6kPKSlcOMT9187nq8Rn81m5cc2Q9O3QBFTHyDbkpahJOO8cmNbSLVlXGt5zbEibIniTqWOY3j5vow2farA"},{"i":"ea0d23e9907fdab20c2e6a44475125375aa59af7d2edcbe9178712ab47643849","s":"mFCeTfaMSB6+ItouBqXWyw==","v":"kIj3/uHN+2OyT+AC","c":"fgaXNSBPFeO8dWheUIrcW9m9KPh6gCeA6iE93EV6FqUC/JHnfnZkmFIhuANeiO5Bzkb9Ia/SW1QpiH3n4twu"},{"i":"e2da42d30a5690d3d6ca559aaea6791e75b2a7e61299e414b7aa42246592bce4","s":"1ZQvTLiWw1i3ddOeU2wxng==","v":"3UPvKooKT7nqSyJu","c":"nwqAs2oYHEmgBvVH7Q+x70hwJtwYWBYQ2udPrmMTwuz00fvBlA9/CpXRvOAE/BRyX4+hNol2hmpDWXqmETSP"},{"i":"2ad0658a65d5c6b7722290f992959ec76847c12ecfc4b5c2842dbd6e07cb94ba","s":"N7lmHsQr8ifTD/Ca8uvYBw==","v":"bU8VpAJBpTFV0qnF","c":"8NJr8P5n0sypHwn3g8EPQWZ63FV0DRkAI8Whiyg+bkN5Cfc5ICR+OZhYmPVQDEeh4qUY32kMJvpFc3HGLhU8"},{"i":"297942f37ca88e4f11b7d433b0ecd1fce9e98032b03f13771f1bffff9c30c067","s":"Qgd/TWDQQmlykPZrG9rjFg==","v":"CvrX/mQIpnw4lAPr","c":"0cg2oElduRZVrNxBlGUNljAr+0J3GoJbDP8g9Gd+cx46wXzwGMmgd6L9nWVD+hoe1wZuJx05bu/W"},{"i":"b80fcd32f699534fee666b840edef16ba3d099b38df92f6e67baf279f326b877","s":"apiaSJ7IRr5YDlujpc6YSQ==","v":"/menIHgL6iv8CnE/","c":"1YlEzKGV1vcTiCxpepu14+54+c6/6jNVEbOmpl9tBARjjjO7zA0kgkiqWPKVEk846grmH3N5rAkd"},{"i":"23539c3f2a7e223fddce1492e56e6271c10830c33dc2e7f444aeb17d5b69f49a","s":"QL3P3lCRKrVEzvgIrsffgQ==","v":"x5nlnRMOhFj7rxZ7","c":"oXuYLtfvW3CZXR57+Qon00vV0BwSfwC8Q+yccjoOMeGJ4TdS6pGmRP+Ku10amS1Jtg8ff3w6+Rp1X5ED6ayx"},{"i":"ab274c3eb06109b0e8121b1a34347012e1a183ca9bf4d7a038e9b558f8d46ca3","s":"dPluGawxWDYwZz8GEaMd3w==","v":"5oUH8+UuUQDpG5co","c":"DGDSqFR7fHAyuOCVWC02NHdWmkl3ak6AxEWZCuCfi7cMMtPx0uhaTm1kP+TM2kmYtCSUKlAKzkzi5ANk9Xmf"}];
+  var ITER = 200000;
+
+  var input = document.getElementById("oldkey");
+  var btn = document.getElementById("go");
+  var result = document.getElementById("result");
+  var errBox = document.getElementById("err");
+  var subtle = (window.crypto && window.crypto.subtle) ? window.crypto.subtle : null;
+
+  function b64ToBytes(b64) {
+    var bin = atob(b64), out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+  function bytesToHex(buf) {
+    var b = new Uint8Array(buf), s = "";
+    for (var i = 0; i < b.length; i++) s += b[i].toString(16).padStart(2, "0");
+    return s;
+  }
+  function fmtCN(sec) {
+    var d = new Date((sec + 8 * 3600) * 1000);
+    function p(n) { return String(n).padStart(2, "0"); }
+    return d.getUTCFullYear() + "-" + p(d.getUTCMonth() + 1) + "-" + p(d.getUTCDate()) +
+      " " + p(d.getUTCHours()) + ":" + p(d.getUTCMinutes()) + "（北京时间）";
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+  function showError(msg) {
+    result.className = "result";
+    result.innerHTML = "";
+    errBox.className = "err show";
+    errBox.innerHTML = msg;
+  }
+
+  function showResult(newKey, expire) {
+    errBox.className = "err";
+    errBox.textContent = "";
+    result.className = "result show";
+    result.innerHTML =
+      '<div class="box">' +
+        '<div class="k">新卡密</div>' +
+        '<div class="row">' +
+          '<div class="val" id="newkey">' + esc(newKey) + '</div>' +
+          '<button class="copy" id="copyBtn" type="button">复制</button>' +
+        '</div>' +
+        '<div class="exp">到期：' + (expire === null ? '<b>永久有效</b>' : '<b>' + fmtCN(expire) + '</b>') + '</div>' +
+      '</div>';
+
+    var copyBtn = document.getElementById("copyBtn");
+    copyBtn.addEventListener("click", function () {
+      copyText(newKey).then(function () {
+        copyBtn.textContent = "已复制";
+        setTimeout(function () { copyBtn.textContent = "复制"; }, 1500);
+      }).catch(function () {
+        copyBtn.textContent = "复制失败";
+        setTimeout(function () { copyBtn.textContent = "复制"; }, 1500);
+      });
+    });
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.top = "0";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        ok ? resolve() : reject(new Error("copy failed"));
+      } catch (e) { reject(e); }
+    });
+  }
+
+  function concat(a, b) {
+    var out = new Uint8Array(a.length + b.length);
+    out.set(a, 0); out.set(b, a.length);
+    return out;
+  }
+
+  var busy = false;
+  async function query() {
+    if (busy) return;
+    var raw = input.value.replace(/^\s+|\s+$/g, "");
+    if (!raw) {
+      showError("请先输入旧卡密。");
+      input.focus();
+      return;
+    }
+    if (!subtle) {
+      showError("当前浏览器环境不支持安全解密，请更换浏览器后重试。");
+      return;
+    }
+
+    busy = true;
+    btn.disabled = true;
+    btn.textContent = "查询中…";
+
+    try {
+      var idx = bytesToHex(await subtle.digest("SHA-256", new TextEncoder().encode(raw)));
+      var entry = null;
+      for (var i = 0; i < ENTRIES.length; i++) {
+        if (ENTRIES[i].i === idx) { entry = ENTRIES[i]; break; }
+      }
+      if (!entry) {
+        showError("未找到该旧卡密，请确认已完整复制且大小写一致。");
+        return;
+      }
+
+      var salt = b64ToBytes(entry.s);
+      var iv = b64ToBytes(entry.v);
+      var blob = b64ToBytes(entry.c);
+      var ct = blob.subarray(0, blob.length - 16);
+      var tag = blob.subarray(blob.length - 16);
+
+      var baseKey = await subtle.importKey("raw", new TextEncoder().encode(raw), "PBKDF2", false, ["deriveBits"]);
+      var bits = await subtle.deriveBits(
+        { name: "PBKDF2", salt: salt, iterations: ITER, hash: "SHA-256" },
+        baseKey, 256
+      );
+      var aesKey = await subtle.importKey("raw", bits, { name: "AES-GCM" }, false, ["decrypt"]);
+      var plain = await subtle.decrypt(
+        { name: "AES-GCM", iv: iv, tagLength: 128 },
+        aesKey,
+        new Uint8Array(concat(ct, tag))
+      );
+      var payload = JSON.parse(new TextDecoder().decode(plain));
+
+      input.value = "";
+      showResult(payload.k, payload.e);
+    } catch (e) {
+      showError("解密失败，请核对旧卡密后重试。");
+    } finally {
+      busy = false;
+      btn.disabled = false;
+      btn.textContent = "查询";
+    }
+  }
+
+  btn.addEventListener("click", query);
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); query(); }
+  });
+})();
+</script>
+</body>
+</html>
